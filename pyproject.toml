@@ -1,6 +1,6 @@
 [project]
 name = "struct-enum"
-version = "0.1.0"
+dynamic = ["version"]
 description = "StructEnum: str enums whose members carry typed msgspec Struct properties"
 readme = "README.md"
 license = "BSD-3-Clause"
@@ -10,7 +10,6 @@ keywords = ["enum", "msgspec", "struct", "typing"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -30,19 +29,32 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/digaph/struct-enum"
-Repository = "https://github.com/digaph/struct-enum"
-Issues = "https://github.com/digaph/struct-enum/issues"
+"Issue Tracker" = "https://github.com/digaph/struct-enum/issues"
+Source = "https://github.com/digaph/struct-enum"
 
 [build-system]
-requires = ["uv_build>=0.13.7,<0.14"]
-build-backend = "uv_build"
+requires = [
+    "setuptools>=80",
+    "setuptools-scm>=8",
+]
+build-backend = "setuptools.build_meta"
 
-[tool.uv.build-backend]
-module-name = "struct_enum"
+[tool.setuptools]
+packages = ["struct_enum"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+# The version comes from the git tag, so a release tag v0.1.0 builds version 0.1.0.
+[tool.setuptools_scm]
+version_file = "src/struct_enum/_version.py"
+
+[tool.uv.config-settings]
+editable_mode = "compat"
 
 [dependency-groups]
 dev = [
-    "pytest==9.2.0",
+    "pytest>=9",
 ]
 
 [tool.pytest.ini_options]
