@@ -1,7 +1,7 @@
 # StructEnum
 
 `StructEnum` is a `str` enum whose members carry typed properties. Each member is a
-[msgspec](https://github.com/jcrist/msgspec) `Struct`, so the properties are checked and
+[msgspec](https://github.com/msgspec/msgspec/) `Struct`, so the properties are checked and
 cheap to encode and decode.
 
 ## Installation
