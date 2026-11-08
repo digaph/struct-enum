@@ -99,7 +99,11 @@ returning nothing.
 ```bash
 uv sync
 uv run pytest
+uv run mypy
 ```
+
+The package ships type annotations (`py.typed`), so IDEs and type checkers use them when you
+import `struct_enum`. `uv run mypy` checks the annotations.
 
 ## License
 

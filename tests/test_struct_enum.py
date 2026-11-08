@@ -16,44 +16,44 @@ class Currency(StructEnum):
     JPY = CurrencyDef(symbol="¥", decimals=0, value="yen")
 
 
-def test_value_defaults_to_member_name():
+def test_value_defaults_to_member_name() -> None:
     assert Currency.EUR == "EUR"
     assert Currency.EUR.value == "EUR"
 
 
-def test_value_override_is_used():
-    assert Currency.JPY == "yen"
+def test_value_override_is_used() -> None:
+    assert Currency.JPY == "yen"  # type: ignore[comparison-overlap]  # str enum literal
     assert Currency.JPY.value == "yen"
 
 
-def test_spec_attributes():
+def test_spec_attributes() -> None:
     assert Currency.EUR.spec.symbol == "€"
     assert Currency.EUR.spec.decimals == 2
     assert Currency.JPY.spec.value == "yen"
 
 
-def test_lookup_by_value():
+def test_lookup_by_value() -> None:
     assert Currency("EUR") is Currency.EUR
     assert Currency("yen") is Currency.JPY
 
 
-def test_iteration_order():
+def test_iteration_order() -> None:
     assert list(Currency) == [Currency.EUR, Currency.JPY]
 
 
-def test_missing_struct_field_is_rejected():
+def test_missing_struct_field_is_rejected() -> None:
     # The Struct rejects the missing field when the member is defined.
     with pytest.raises(TypeError):
-        CurrencyDef(symbol="$")
+        CurrencyDef(symbol="$")  # type: ignore[call-arg]  # deliberately missing a field
 
 
-def test_spec_fields_are_reachable_directly_on_member():
+def test_spec_fields_are_reachable_directly_on_member() -> None:
     assert Currency.EUR.symbol == "€"
     assert Currency.EUR.decimals == 2
     assert Currency.JPY.decimals == 0
 
 
-def test_unknown_attribute_still_raises():
+def test_unknown_attribute_still_raises() -> None:
     with pytest.raises(AttributeError):
         Currency.EUR.no_such_field
 
@@ -69,17 +69,17 @@ class Country(StructEnum):
     JP = CountryDef(code="JP", currency=Currency.JPY)
 
 
-def test_spec_can_hold_another_struct_enum():
+def test_spec_can_hold_another_struct_enum() -> None:
     assert Country.NL.spec.currency is Currency.EUR
     assert Country.JP.spec.currency is Currency.JPY
 
 
-def test_nested_struct_enum_is_reachable_directly_on_member():
+def test_nested_struct_enum_is_reachable_directly_on_member() -> None:
     assert Country.NL.currency is Currency.EUR
     assert Country.NL.currency.symbol == "€"
 
 
-def test_nested_struct_enum_round_trips_through_msgspec():
+def test_nested_struct_enum_round_trips_through_msgspec() -> None:
     encoded = msgspec.json.encode(Country.JP.spec)
     decoded = msgspec.json.decode(encoded, type=CountryDef)
     assert decoded.currency is Currency.JPY
@@ -97,23 +97,23 @@ class Listing(StructEnum):
     GAMMA = ListingDef(size="large", regions=("ASIA",))
 
 
-def test_filter_by_scalar_property():
+def test_filter_by_scalar_property() -> None:
     assert Listing.filter(size="large") == [Listing.ALPHA, Listing.GAMMA]
 
 
-def test_filter_matches_when_a_tuple_property_contains_the_value():
+def test_filter_matches_when_a_tuple_property_contains_the_value() -> None:
     assert Listing.filter(regions="EU") == [Listing.ALPHA, Listing.BETA]
 
 
-def test_filter_combines_properties_with_and():
+def test_filter_combines_properties_with_and() -> None:
     assert Listing.filter(size="large", regions="EU") == [Listing.ALPHA]
 
 
-def test_filter_with_no_match_is_empty():
+def test_filter_with_no_match_is_empty() -> None:
     assert Listing.filter(size="huge") == []
 
 
-def test_filter_unknown_property_raises():
+def test_filter_unknown_property_raises() -> None:
     with pytest.raises(AttributeError):
         Listing.filter(colour="red")
 
@@ -127,15 +127,15 @@ class Plan(StructEnum):
     PRO = PlanDef(symbol="p", value="professional")
 
 
-def test_struct_enum_def_value_defaults_to_none():
+def test_struct_enum_def_value_defaults_to_none() -> None:
     assert StructEnumDef().value is None
 
 
-def test_subclass_with_required_fields_gets_value_by_default():
+def test_subclass_with_required_fields_gets_value_by_default() -> None:
     assert PlanDef(symbol="x").value is None
 
 
-def test_member_without_value_uses_member_name():
+def test_member_without_value_uses_member_name() -> None:
     assert Plan.BASIC == "BASIC"
-    assert Plan.PRO == "professional"
+    assert Plan.PRO == "professional"  # type: ignore[comparison-overlap]  # str enum literal
     assert Plan.PRO.symbol == "p"
