@@ -3,3 +3,4 @@
 __pycache__/
 dist/
 src/struct_enum/_version.py
+*.egg-info/

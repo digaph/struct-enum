@@ -1,5 +1,6 @@
 # Publishes to PyPI when a GitHub release is published. Uses PyPI trusted publishing,
-# so no API token is stored. The release tag must be v<version>, e.g. v0.1.0.
+# so no API token is stored. The version comes from the git tag, so the release tag must be
+# v<version>, e.g. v0.1.0.
 name: Publish
 
 on:
@@ -25,16 +26,20 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
+      # Full history, so setuptools-scm can read the release tag.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v6
-      - name: Check the release tag matches the package version
+      - run: uv build
+      - name: Check the built version matches the release tag
         run: |
-          version="$(uv version --short)"
-          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
-            echo "Release tag $GITHUB_REF_NAME does not match pyproject version v$version" >&2
+          version="${GITHUB_REF_NAME#v}"
+          if [ ! -f "dist/struct_enum-${version}-py3-none-any.whl" ]; then
+            echo "Release tag $GITHUB_REF_NAME does not match the built version" >&2
+            ls dist/ >&2
             exit 1
           fi
-      - run: uv build
       - uses: actions/upload-artifact@v4
         with:
           name: dist

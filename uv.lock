@@ -168,7 +168,6 @@ wheels = [
 
 [[package]]
 name = "struct-enum"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "msgspec" },
@@ -183,7 +182,7 @@ dev = [
 requires-dist = [{ name = "msgspec", specifier = ">=0.21.0" }]
 
 [package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = "==9.2.0" }]
+dev = [{ name = "pytest", specifier = ">=9" }]
 
 [[package]]
 name = "tomli"
